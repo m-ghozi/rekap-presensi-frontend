@@ -1,27 +1,63 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Container,
-  Typography,
-  Box,
-  Alert,
-  Snackbar,
-  CssBaseline,
-  ThemeProvider,
-  createTheme
+  Container, Typography, Box, Alert, Snackbar,
+  CssBaseline, ThemeProvider, createTheme,
+  AppBar, Toolbar, IconButton, Paper
 } from '@mui/material';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import api from './api/axiosConfig';
 import type { IPresensi, IFilterParams } from './types/presensi';
 import FilterPanel from './components/FilterPanel';
 import PresensiTable from './components/PresensiTable';
 
-// Membuat tema sederhana untuk tampilan yang lebih profesional
+// Refined Theme extending default Material UI palette
 const theme = createTheme({
   palette: {
+    background: {
+      default: '#f4f6f8',
+    },
     primary: {
       main: '#1976d2',
     },
-    success: {
-      main: '#2e7d32',
+    secondary: {
+      main: '#9c27b0',
+    },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    h5: {
+      fontWeight: 600,
+    },
+  },
+  shape: {
+    borderRadius: 8,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: '0 4px 6px rgba(0,0,0,0.12)',
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.06),0px 4px 5px 0px rgba(0,0,0,0.04),0px 1px 10px 0px rgba(0,0,0,0.02)',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+        },
+      },
     },
   },
 });
@@ -38,11 +74,6 @@ const App: React.FC = () => {
   });
 
   // --- Functions ---
-
-  /**
-   * Mengambil data hari ini (Hit pertama kali)
-   * Menggunakan endpoint /today agar loading awal ringan
-   */
   const fetchTodayData = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -59,12 +90,7 @@ const App: React.FC = () => {
     }
   }, []);
 
-  /**
-   * Mengambil data berdasarkan filter (Pencarian Kustom)
-   * Menggunakan endpoint utama /
-   */
   const fetchSearchData = async () => {
-    // Jika filter kosong, arahkan kembali ke fetchTodayData untuk efisiensi
     if (!filters.startDate && !filters.endDate && !filters.name) {
       fetchTodayData();
       return;
@@ -84,9 +110,6 @@ const App: React.FC = () => {
     }
   };
 
-  /**
-   * Menangani download excel
-   */
   const handleDownload = async () => {
     try {
       const response = await api.get('/download', {
@@ -106,9 +129,6 @@ const App: React.FC = () => {
     }
   };
 
-  /**
-   * Menangani perubahan input pada FilterPanel
-   */
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFilters(prev => ({
@@ -125,48 +145,48 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Header Section */}
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            Dashboard Rekap Presensi Pegawai
-          </Typography>
-          <Typography variant="body2" color="text.disabled">
-            Menampilkan data kehadiran secara real-time dari database hospital.
-          </Typography>
-        </Box>
 
-        {/* Filter Section */}
-        <FilterPanel
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onSearch={fetchSearchData}
-          onDownload={handleDownload}
-          loading={loading}
-        />
+      <Box sx={{ flexGrow: 1, p: { xs: 2, md: 2 } }}>
+        <Container maxWidth="xl">
 
-        {/* Data Table Section */}
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
-            {filters.startDate || filters.name
-              ? `Hasil Pencarian: ${data.length} data ditemukan`
-              : `Presensi Hari Ini (${new Date().toLocaleDateString('id-ID')})`}
-          </Typography>
-          <PresensiTable data={data} loading={loading} />
-        </Box>
+          {/* Filter Section */}
+          <FilterPanel
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onSearch={fetchSearchData}
+            onDownload={handleDownload}
+            loading={loading}
+          />
 
-        {/* Error Notification */}
-        <Snackbar
-          open={!!error}
-          autoHideDuration={5000}
-          onClose={() => setError(null)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert severity="error" variant="filled" onClose={() => setError(null)} sx={{ width: '100%' }}>
-            {error}
-          </Alert>
-        </Snackbar>
-      </Container>
+          {/* Data Table Section */}
+          <Box sx={{ mt: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                {filters.startDate || filters.name
+                  ? `Hasil Pencarian: ${data.length} Log Presensi`
+                  : `Data Kehadiran Hari Ini`}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </Typography>
+            </Box>
+
+            <PresensiTable data={data} loading={loading} />
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Error Notification */}
+      <Snackbar
+        open={!!error}
+        autoHideDuration={5000}
+        onClose={() => setError(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert severity="error" variant="filled" onClose={() => setError(null)} sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };
