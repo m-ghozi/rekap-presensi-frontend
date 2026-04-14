@@ -21,6 +21,14 @@ const getStatusColor = (status: string) => {
 };
 
 const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
+
+  const formatKeterangan = (text: string | null) => {
+    if (!text) return '-';
+    // Jika mengandung kata 'Mobile', langsung singkat menjadi 'Mobile'
+    if (text.includes('Mobile')) return 'Mobile';
+    return text;
+  };
+
   return (
     <TableContainer component={Card} sx={{ maxHeight: 650, borderRadius: 2 }}>
       <Table stickyHeader>
@@ -90,13 +98,13 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" color="text.secondary">
-                    {row.keterangan || '-'}
+                    {formatKeterangan(row.keterangan) || '-'}
                   </Typography>
                 </TableCell>
               </TableRow>
             );
           })}
-          
+
           {data.length === 0 && !loading && (
             <TableRow>
               <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
