@@ -111,8 +111,16 @@ const App: React.FC = () => {
 
   const handleDownload = async () => {
     try {
+      // Default to today's date if no filter dates are selected
+      const today = new Date().toISOString().split('T')[0];
+      const downloadParams = {
+        ...filters,
+        startDate: filters.startDate || today,
+        endDate: filters.endDate || today,
+      };
+
       const response = await api.get('/download', {
-        params: filters,
+        params: downloadParams,
         responseType: 'blob',
       });
 
