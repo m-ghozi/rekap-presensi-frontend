@@ -26,6 +26,7 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
     if (!text) return '-';
     // Jika mengandung kata 'Mobile', langsung singkat menjadi 'Mobile'
     if (text.includes('Mobile')) return 'Mobile';
+    if (text.includes('Otomatis')) return 'Fingerprint';
     return text;
   };
 
@@ -83,6 +84,11 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
                       {new Date(row.jam_pulang).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                     </Typography>
                   ) : '-'}
+                  {row.jam_pulang && (
+                    <Typography variant="caption" color="text.disabled">
+                      {new Date(row.jam_pulang).toLocaleDateString('id-ID')}
+                    </Typography>
+                  )}
                 </TableCell>
                 <TableCell>
                   {row.status ? (

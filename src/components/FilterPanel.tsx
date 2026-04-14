@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, Stack, TextField, Button, Box, InputAdornment, Typography } from '@mui/material';
 import { Search as SearchIcon, Download as DownloadIcon, FilterAlt as FilterAltIcon } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import type { IFilterParams } from '../types/presensi';
 
 interface FilterPanelProps {
@@ -14,14 +16,14 @@ interface FilterPanelProps {
 const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange, onSearch, onDownload, loading }) => {
   return (
     <Card>
-      <CardContent sx={{ p: 3 }}>
+      <CardContent sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <FilterAltIcon color="primary" sx={{ mr: 1 }} />
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          <Typography variant="h6">
             Filter Data
           </Typography>
         </Box>
-        
+
         <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2} sx={{ alignItems: 'center' }}>
           <TextField
             label="Nama Pegawai"
@@ -42,29 +44,25 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange, onSe
             value={filters.name}
             onChange={onFilterChange}
           />
-          <TextField
+          <DatePicker
             label="Tanggal Mulai"
-            name="startDate"
-            type="date"
-            size="small"
-            variant="outlined"
-            fullWidth
-            slotProps={{ inputLabel: { shrink: true } }}
-            value={filters.startDate}
-            onChange={onFilterChange}
+            format="DD/MM/YYYY"
+            value={filters.startDate ? dayjs(filters.startDate) : null}
+            onChange={(newValue) => onFilterChange({
+              target: { name: 'startDate', value: newValue ? newValue.format('YYYY-MM-DD') : '' }
+            } as any)}
+            slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
-          <TextField
+          <DatePicker
             label="Tanggal Selesai"
-            name="endDate"
-            type="date"
-            size="small"
-            variant="outlined"
-            fullWidth
-            slotProps={{ inputLabel: { shrink: true } }}
-            value={filters.endDate}
-            onChange={onFilterChange}
+            format="DD/MM/YYYY"
+            value={filters.endDate ? dayjs(filters.endDate) : null}
+            onChange={(newValue) => onFilterChange({
+              target: { name: 'endDate', value: newValue ? newValue.format('YYYY-MM-DD') : '' }
+            } as any)}
+            slotProps={{ textField: { size: 'small', fullWidth: true } }}
           />
-          
+
           <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', lg: 'auto' } }}>
             <Button
               variant="contained"

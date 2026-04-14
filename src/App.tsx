@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container, Typography, Box, Alert, Snackbar,
-  CssBaseline, ThemeProvider, createTheme,
-  AppBar, Toolbar, IconButton, Paper
+  CssBaseline, ThemeProvider, createTheme
 } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import api from './api/axiosConfig';
 import type { IPresensi, IFilterParams } from './types/presensi';
 import FilterPanel from './components/FilterPanel';
@@ -144,7 +143,8 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CssBaseline />
 
       <Box sx={{ flexGrow: 1, p: { xs: 2, md: 2 } }}>
         <Container maxWidth="xl">
@@ -159,9 +159,9 @@ const App: React.FC = () => {
           />
 
           {/* Data Table Section */}
-          <Box sx={{ mt: 4 }}>
+          <Box sx={{ mt: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="h6">
                 {filters.startDate || filters.name
                   ? `Hasil Pencarian: ${data.length} Log Presensi`
                   : `Data Kehadiran Hari Ini`}
@@ -186,7 +186,8 @@ const App: React.FC = () => {
         <Alert severity="error" variant="filled" onClose={() => setError(null)} sx={{ width: '100%' }}>
           {error}
         </Alert>
-      </Snackbar>
+        </Snackbar>
+      </LocalizationProvider>
     </ThemeProvider>
   );
 };
