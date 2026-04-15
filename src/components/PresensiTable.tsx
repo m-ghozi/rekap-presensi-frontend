@@ -31,7 +31,7 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
   };
 
   return (
-    <TableContainer component={Card} sx={{ maxHeight: 650, borderRadius: 2 }}>
+    <TableContainer component={Card} sx={{ borderRadius: 2 }}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
