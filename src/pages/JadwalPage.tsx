@@ -4,6 +4,7 @@ import {
   Paper, TextField, MenuItem, Box, CircularProgress
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import DownloadIcon from '@mui/icons-material/Download';
 import api from '../api/axiosConfig';
 import type { JadwalPegawai } from '../types/jadwal';
 
@@ -31,6 +32,25 @@ const JadwalPage = () => {
       console.error("Gagal load jadwal", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      const response = await api.get('/jadwal/download', {
+        params: filters,
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Jadwal_${filters.bulan}_${filters.tahun}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Gagal mendownload jadwal", error);
+      alert("Gagal mendownload data jadwal.");
     }
   };
 
@@ -71,6 +91,17 @@ const JadwalPage = () => {
           sx={{ minWidth: 120 }}
         >
           Cari
+        </Button>
+
+        <Button
+          variant="outlined"
+          color="success"
+          startIcon={<DownloadIcon />}
+          onClick={handleDownload}
+          disabled={loading}
+          sx={{ minWidth: 120 }}
+        >
+          Download
         </Button>
       </Box>
 
