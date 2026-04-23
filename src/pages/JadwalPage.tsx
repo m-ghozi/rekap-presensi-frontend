@@ -19,11 +19,31 @@ const JadwalPage = () => {
   });
 
   // Tentukan kolom yang akan dirender
-  const daysToShow = filters.tanggal
-    ? [`h${filters.tanggal}`]
-    : Array.from({ length: 31 }, (_, i) => `h${i + 1}`);
+  const getDaysToShow = (tglStr: string) => {
+    if (!tglStr) return Array.from({ length: 31 }, (_, i) => `h${i + 1}`);
+    if (tglStr.includes('-')) {
+      const [startStr, endStr] = tglStr.split('-');
+      const start = parseInt(startStr);
+      const end = parseInt(endStr);
+      if (!isNaN(start) && !isNaN(end) && start <= end) {
+        return Array.from({ length: end - start + 1 }, (_, i) => `h${start + i}`);
+      }
+    }
+    const parsed = parseInt(tglStr);
+    return !isNaN(parsed) ? [`h${parsed}`] : Array.from({ length: 31 }, (_, i) => `h${i + 1}`);
+  };
+
+  const daysToShow = getDaysToShow(filters.tanggal);
 
   const fetchJadwal = async () => {
+    // Hindari pemanggilan API jika format range belum selesai diketik (misal "1-")
+    if (filters.tanggal && filters.tanggal.includes('-')) {
+      const parts = filters.tanggal.split('-');
+      if (parts.length !== 2 || parts[0] === '' || parts[1] === '') {
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const response = await api.get('/jadwal', { params: filters });
@@ -56,7 +76,7 @@ const JadwalPage = () => {
 
   useEffect(() => {
     fetchJadwal();
-  }, [filters.bulan, filters.tahun]); // Auto fetch jika bulan/tahun berubah
+  }, [filters.bulan, filters.tahun, filters.tanggal]); // Auto fetch jika bulan/tahun/tanggal berubah
 
   return (
     <Box sx={{ p: 2 }}>
@@ -74,9 +94,8 @@ const JadwalPage = () => {
           onChange={(e) => setFilters({ ...filters, tahun: Number(e.target.value) })} sx={{ width: 100 }} />
 
         {/* Input Filter Tanggal */}
-        <TextField label="Tgl (1-31)" type="number" size="small" value={filters.tanggal}
-          onChange={(e) => setFilters({ ...filters, tanggal: e.target.value })} sx={{ width: 100 }}
-          slotProps={{ htmlInput: { min: 1, max: 31 } }} />
+        <TextField label="Tanggal" type="text" size="small" value={filters.tanggal}
+          onChange={(e) => setFilters({ ...filters, tanggal: e.target.value })} sx={{ width: 120 }} />
 
         <TextField label="Cari Nama..." size="small" value={filters.name}
           onChange={(e) => setFilters({ ...filters, name: e.target.value })}
