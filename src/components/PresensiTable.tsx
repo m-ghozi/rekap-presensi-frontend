@@ -20,6 +20,21 @@ const getStatusColor = (status: string) => {
   return 'default';
 };
 
+const getDurasiColor = (durasi: string | undefined | null) => {
+  if (!durasi || durasi === '-') return 'default';
+  let hours = 0;
+  
+  if (durasi.includes(':')) {
+    const parts = durasi.split(':');
+    hours = parseInt(parts[0], 10);
+  } else {
+    const hoursMatch = durasi.match(/(\d+)\s*Jam/i);
+    hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+  }
+  
+  return hours < 7 ? 'error' : 'success';
+};
+
 const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
 
   const formatKeterangan = (text: string | null) => {
@@ -41,6 +56,7 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
             <TableCell sx={{ fontWeight: 'bold', bgcolor: 'primary.main', color: 'primary.contrastText' }}>Pulang</TableCell>
             <TableCell sx={{ fontWeight: 'bold', bgcolor: 'primary.main', color: 'primary.contrastText' }}>Status</TableCell>
             <TableCell sx={{ fontWeight: 'bold', bgcolor: 'primary.main', color: 'primary.contrastText' }}>Keterlambatan</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', bgcolor: 'primary.main', color: 'primary.contrastText' }}>Durasi</TableCell>
             <TableCell sx={{ fontWeight: 'bold', bgcolor: 'primary.main', color: 'primary.contrastText' }}>Keterangan</TableCell>
           </TableRow>
         </TableHead>
@@ -103,6 +119,13 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
                   )}
                 </TableCell>
                 <TableCell>
+                  {row.durasi && row.durasi !== '-' ? (
+                    <Chip label={row.durasi} variant="outlined" color={getDurasiColor(row.durasi) as any} size="small" sx={{ fontWeight: 600 }} />
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">-</Typography>
+                  )}
+                </TableCell>
+                <TableCell>
                   <Typography variant="body2" color="text.secondary">
                     {formatKeterangan(row.keterangan) || '-'}
                   </Typography>
@@ -113,7 +136,7 @@ const PresensiTable: React.FC<PresensiTableProps> = ({ data, loading }) => {
 
           {data.length === 0 && !loading && (
             <TableRow>
-              <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
+              <TableCell colSpan={8} align="center" sx={{ py: 6 }}>
                 <Typography variant="h6" color="text.secondary" gutterBottom>
                   Tidak ada data presensi.
                 </Typography>
