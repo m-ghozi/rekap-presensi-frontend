@@ -1,73 +1,69 @@
-# React + TypeScript + Vite
+# Rekap Presensi Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikasi frontend (antarmuka pengguna) untuk Sistem Rekapitulasi Presensi dan Penjadwalan. Proyek ini dibangun menggunakan web technology modern untuk memberikan antarmuka yang responsif, cepat, dan mudah digunakan bagi admin atau pengguna dalam memantau data kehadiran dan jadwal.
 
-Currently, two official plugins are available:
+## 🚀 Fitur Utama
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Otentikasi:** Halaman login yang aman dan terintegrasi dengan backend API (berbasis JWT).
+- **Dashboard Presensi:** Menampilkan tabel rekap data presensi (jam kedatangan, kepulangan, durasi kerja, dan status) dengan fitur filter berdasarkan nama dan rentang tanggal.
+- **Manajemen Jadwal:** Antarmuka kalender/tabel untuk memonitor jadwal kerja karyawan secara bulanan. Dilengkapi dengan fitur unduh/export jadwal ke format Excel.
+- **UI Responsif & Modern:** Dibangun menggunakan komponen Material UI (MUI) untuk memberikan pengalaman pengguna yang elegan dan konsisten.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool:** [Vite](https://vitejs.dev/) (untuk performa *HMR* dan waktu build yang sangat cepat)
+- **UI Library:** [Material UI (MUI)](https://mui.com/) & Emotion
+- **HTTP Client:** [Axios](https://axios-http.com/) (terkonfigurasi dengan interceptors untuk *auth token*)
+- **Date Utility:** [Day.js](https://day.js.org/) (manipulasi format tanggal dan waktu secara ringan)
 
-## Expanding the ESLint configuration
+## 📋 Prasyarat
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Pastikan Anda telah menginstal perangkat lunak berikut:
+- **Node.js** (versi 18.x atau lebih baru disarankan)
+- **Backend API:** Pastikan [rekap-presensi-backend](../rekap-presensi-backend) sudah berjalan agar aplikasi frontend ini dapat mengambil dan memproses data.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## ⚙️ Variabel Lingkungan (Environment Variables)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Aplikasi ini menggunakan Axios yang secara bawaan diarahkan ke `http://localhost:5000/api`. Jika menggunakan `.env`, Anda dapat membuat file `.env` di *root* direktori frontend:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+*(Silakan sesuaikan pengaturan base URL pada `src/api/axiosConfig.ts` jika menggunakan variabel env).*
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 💻 Instalasi dan Menjalankan Frontend
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. **Pindah ke direktori frontend:**
+   ```bash
+   cd rekap-presensi-frontend
+   ```
+
+2. **Instal dependensi:**
+   ```bash
+   npm install
+   ```
+
+3. **Jalankan aplikasi (Mode Development):**
+   ```bash
+   npm run dev
+   ```
+   Aplikasi akan dapat diakses secara lokal di `http://localhost:5173`.
+
+4. **Build untuk Production:**
+   ```bash
+   npm run build
+   ```
+   Hasil *build* statis akan dihasilkan pada folder `dist/` dan siap untuk di-deploy (contoh: Nginx, Vercel, Netlify).
+
+## 🗺️ Struktur Proyek
+
+- `/src/api` - Konfigurasi Axios dan API interceptors.
+- `/src/components` - Komponen React yang dapat digunakan ulang (*reusable*).
+- `/src/context` - React Context untuk state management global (seperti state otentikasi).
+- `/src/pages` - Halaman-halaman utama aplikasi (*LoginPage*, *PresensiPage*, *JadwalPage*).
+- `/src/types` - Definisi tipe TypeScript (*interfaces*).
+
+## 👤 Author
+**M. Ghozi Syah Putra**
