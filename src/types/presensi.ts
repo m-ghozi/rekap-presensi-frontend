@@ -14,3 +14,15 @@ export interface IFilterParams {
     endDate?: string;
     name?: string;
 }
+
+export interface ILaporanPenilaian {
+    nama_pegawai: string;
+    total_hadir: string | number;
+    tepat_waktu: string | number;
+    terlambat_1: string | number;
+    terlambat_2: string | number;
+    tidak_hadir: string | number;
+    total_jam_kerja: string;
+    hari_kerja_efektif: string | number;
+    persentase_kehadiran: string;
+}

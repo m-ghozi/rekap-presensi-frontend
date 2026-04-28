@@ -9,7 +9,7 @@ interface FilterPanelProps {
   filters: IFilterParams;
   onFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearch: () => void;
-  onDownload: () => void;
+  onDownload?: () => void;
   loading: boolean;
 }
 
@@ -75,16 +75,18 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange, onSe
             >
               Cari
             </Button>
-            <Button
-              variant="outlined"
-              color="success"
-              startIcon={<DownloadIcon />}
-              onClick={onDownload}
-              fullWidth
-              sx={{ minWidth: 120 }}
-            >
-              Excel
-            </Button>
+            {onDownload && (
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<DownloadIcon />}
+                onClick={onDownload}
+                fullWidth
+                sx={{ minWidth: 120 }}
+              >
+                Excel
+              </Button>
+            )}
           </Box>
         </Stack>
       </CardContent>
