@@ -14,16 +14,16 @@ interface PresensiTableProps {
 // Visual helpers for specific status
 const getStatusColor = (status: string) => {
   const s = status?.toLowerCase() || '';
-  if (s.includes('tepat') || s === 'hadir') return 'success';
-  if (s.includes('terlambat')) return 'error';
-  if (s.includes('izin') || s.includes('cuti')) return 'warning';
+  if (s.includes('tepat waktu') || s.includes('terlambat toleransi')) return 'success';
+  if (s.includes('terlambat ii')) return 'error';
+  if (s.includes('terlambat i')) return 'warning';
   return 'default';
 };
 
 const getDurasiColor = (durasi: string | undefined | null) => {
   if (!durasi || durasi === '-') return 'default';
   let hours = 0;
-  
+
   if (durasi.includes(':')) {
     const parts = durasi.split(':');
     hours = parseInt(parts[0], 10);
@@ -31,7 +31,7 @@ const getDurasiColor = (durasi: string | undefined | null) => {
     const hoursMatch = durasi.match(/(\d+)\s*Jam/i);
     hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
   }
-  
+
   return hours < 7 ? 'error' : 'success';
 };
 
