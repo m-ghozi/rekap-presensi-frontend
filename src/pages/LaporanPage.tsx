@@ -12,12 +12,12 @@ import FilterPanel from '../components/FilterPanel';
 import PresensiTable from '../components/PresensiTable';
 
 const LaporanPage: React.FC = () => {
-  const [loading,          setLoading]          = useState<boolean>(false);
-  const [downloading,      setDownloading]      = useState<boolean>(false);
-  const [error,            setError]            = useState<string | null>(null);
-  const [laporan,          setLaporan]          = useState<ILaporanPenilaian | null>(null);
-  const [riwayat,          setRiwayat]          = useState<IPresensi[]>([]);
-  const [filters,          setFilters]          = useState<IFilterParams>({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [downloading, setDownloading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [laporan, setLaporan] = useState<ILaporanPenilaian | null>(null);
+  const [riwayat, setRiwayat] = useState<IPresensi[]>([]);
+  const [filters, setFilters] = useState<IFilterParams>({
     startDate: '',
     endDate: '',
     name: '',
@@ -35,11 +35,11 @@ const LaporanPage: React.FC = () => {
       const params = {
         name: filters.name,
         startDate: filters.startDate,
-        endDate:   filters.endDate,
+        endDate: filters.endDate,
       };
       const [laporanRes, riwayatRes] = await Promise.all([
         api.get('/laporan/penilaian', { params }),
-        api.get('/presensi/',          { params }),
+        api.get('/presensi/', { params }),
       ]);
       setLaporan(laporanRes.data.success && laporanRes.data.data.length > 0
         ? laporanRes.data.data[0] : null);
@@ -60,9 +60,9 @@ const LaporanPage: React.FC = () => {
     setDownloading(true);
     try {
       const params = new URLSearchParams();
-      if (filters.name)      params.append('name',      filters.name);
+      if (filters.name) params.append('name', filters.name);
       if (filters.startDate) params.append('startDate', filters.startDate);
-      if (filters.endDate)   params.append('endDate',   filters.endDate);
+      if (filters.endDate) params.append('endDate', filters.endDate);
 
       // Gunakan fetch biasa agar bisa handle blob response
       const token = localStorage.getItem('token'); // sesuaikan dengan cara Anda menyimpan JWT
@@ -82,14 +82,14 @@ const LaporanPage: React.FC = () => {
       }
 
       const blob = await response.blob();
-      const url  = window.URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href     = url;
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
 
       // Nama file dari Content-Disposition header (jika ada) atau fallback
-      const cd       = response.headers.get('Content-Disposition') || '';
-      const fnMatch  = cd.match(/filename=([^;]+)/);
-      a.download     = fnMatch ? fnMatch[1] : `laporan_${filters.name}.xlsx`;
+      const cd = response.headers.get('Content-Disposition') || '';
+      const fnMatch = cd.match(/filename=([^;]+)/);
+      a.download = fnMatch ? fnMatch[1] : `laporan_${filters.name}.xlsx`;
 
       document.body.appendChild(a);
       a.click();
@@ -184,10 +184,10 @@ const LaporanPage: React.FC = () => {
                     <StatCard title="Tepat Waktu" value={laporan.tepat_waktu} color="success.main" />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4, md: 3 }}>
-                    <StatCard title="Terlambat 1 (4-10m)" value={laporan.terlambat_1} color="warning.main" />
+                    <StatCard title="Terlambat I" value={laporan.terlambat_1} color="warning.main" />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4, md: 3 }}>
-                    <StatCard title="Terlambat 2 (>10m)" value={laporan.terlambat_2} color="error.main" />
+                    <StatCard title="Terlambat II" value={laporan.terlambat_2} color="error.main" />
                   </Grid>
                   <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                     <StatCard title="Tidak Hadir / Alpha" value={laporan.tidak_hadir} color="error.main" />
