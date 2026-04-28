@@ -1,9 +1,10 @@
 import React from 'react';
-import { Card, CardContent, Stack, TextField, Button, Box, InputAdornment, Typography } from '@mui/material';
+import { Card, CardContent, Stack, Button, Box, Typography } from '@mui/material';
 import { Search as SearchIcon, Download as DownloadIcon, FilterAlt as FilterAltIcon } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import type { IFilterParams } from '../types/presensi';
+import AutocompletePegawai from './AutocompletePegawai';
 
 interface FilterPanelProps {
   filters: IFilterParams;
@@ -25,24 +26,11 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange, onSe
         </Box>
 
         <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2} sx={{ alignItems: 'center' }}>
-          <TextField
-            label="Nama Pegawai"
-            name="name"
-            size="small"
-            variant="outlined"
-            fullWidth
-            placeholder="Cari berdasarkan nama..."
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon fontSize="small" />
-                  </InputAdornment>
-                ),
-              }
-            }}
-            value={filters.name}
-            onChange={onFilterChange}
+          <AutocompletePegawai
+            value={filters.name || ''}
+            onChange={(newValue) => onFilterChange({
+              target: { name: 'name', value: newValue }
+            } as any)}
           />
           <DatePicker
             label="Tanggal Mulai"

@@ -7,6 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 import api from '../api/axiosConfig';
 import type { JadwalPegawai } from '../types/jadwal';
+import AutocompletePegawai from '../components/AutocompletePegawai';
 
 const JadwalPage = () => {
   const [data, setData] = useState<JadwalPegawai[]>([]);
@@ -97,9 +98,12 @@ const JadwalPage = () => {
         <TextField label="Tanggal" type="text" size="small" value={filters.tanggal}
           onChange={(e) => setFilters({ ...filters, tanggal: e.target.value })} sx={{ width: 120 }} />
 
-        <TextField label="Cari Nama..." size="small" value={filters.name}
-          onChange={(e) => setFilters({ ...filters, name: e.target.value })}
-          onKeyPress={(e) => e.key === 'Enter' && fetchJadwal()} />
+        <Box sx={{ width: 300 }}>
+          <AutocompletePegawai
+            value={filters.name}
+            onChange={(newValue) => setFilters({ ...filters, name: newValue })}
+          />
+        </Box>
 
         <Button
           variant="contained"
