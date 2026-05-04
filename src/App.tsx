@@ -10,6 +10,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import PresensiPage from './pages/PresensiPage';
 import JadwalPage from './pages/JadwalPage';
 import LaporanPage from './pages/LaporanPage';
+import LaporanBulananPage from './pages/LaporanBulananPage';
 import LoginPage from './pages/LoginPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -67,6 +68,7 @@ const AppContent: React.FC = () => {
             <Tab label="REKAP PRESENSI" />
             <Tab label="JADWAL PEGAWAI" />
             <Tab label="LAPORAN INDIVIDU" />
+            <Tab label="LAPORAN BULANAN" />
           </Tabs>
         </Box>
 
@@ -74,6 +76,7 @@ const AppContent: React.FC = () => {
           {currentTab === 0 && <PresensiPage />}
           {currentTab === 1 && <JadwalPage />}
           {currentTab === 2 && <LaporanPage />}
+          {currentTab === 3 && <LaporanBulananPage />}
         </Box>
       </Container>
     </>

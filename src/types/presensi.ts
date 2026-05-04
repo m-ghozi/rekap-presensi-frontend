@@ -25,4 +25,18 @@ export interface ILaporanPenilaian {
     total_jam_kerja: string;
     hari_kerja_efektif: string | number;
     persentase_kehadiran: string;
-}
+}
+
+export interface ILaporanBulanan {
+    no: number;
+    nama_pegawai: string;
+    jumlah_hadir: string | number;
+    tepat_waktu: string | number;
+    terlambat: string | number;
+    total_keterlambatan: string;
+    tidak_hadir: string | number;
+    total_jam_kerja: string;
+    hari_kerja_efektif: string | number;
+    persentase_kehadiran: string;
+}
+
