@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container, Box, Tabs, Tab, CssBaseline, ThemeProvider, createTheme,
   AppBar, Toolbar, Typography, Button, Tooltip
@@ -25,10 +25,47 @@ const theme = createTheme({
   }
 });
 
+// Baca tab awal dari history state (jika ada), fallback ke 0
+const getInitialTab = (): number => {
+  const state = window.history.state;
+  if (state && typeof state.tab === 'number') return state.tab;
+  return 0;
+};
+
 // Komponen utama yang sudah tahu status login
 const AppContent: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState<number>(getInitialTab);
+
+  // Saat pertama kali mount, pastikan history entry awal sudah punya state tab
+  useEffect(() => {
+    const state = window.history.state;
+    if (!state || typeof state.tab !== 'number') {
+      // Ganti entry saat ini agar punya state tab=0
+      window.history.replaceState({ tab: 0 }, '');
+    }
+  }, []);
+
+  // Tangkap tombol back/forward hardware
+  const handlePopState = useCallback((event: PopStateEvent) => {
+    const tab = event.state?.tab;
+    if (typeof tab === 'number') {
+      setCurrentTab(tab);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [handlePopState]);
+
+  // Ganti tab: push state baru ke history agar back button bisa balik
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    if (newValue !== currentTab) {
+      window.history.pushState({ tab: newValue }, '');
+      setCurrentTab(newValue);
+    }
+  };
 
   if (!isAuthenticated) {
     return <LoginPage />;
@@ -60,7 +97,7 @@ const AppContent: React.FC = () => {
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3, bgcolor: 'background.paper', borderRadius: 1 }}>
           <Tabs
             value={currentTab}
-            onChange={(_, newValue) => setCurrentTab(newValue)}
+            onChange={handleTabChange}
             variant="fullWidth"
             indicatorColor="primary"
             textColor="primary"
