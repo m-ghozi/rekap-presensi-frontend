@@ -12,6 +12,7 @@ import JadwalPage from './pages/JadwalPage';
 import LaporanPage from './pages/LaporanPage';
 import LaporanBulananPage from './pages/LaporanBulananPage';
 import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const theme = createTheme({
@@ -102,6 +103,7 @@ const AppContent: React.FC = () => {
             indicatorColor="primary"
             textColor="primary"
           >
+            <Tab label="DASHBOARD" />
             <Tab label="REKAP PRESENSI" />
             <Tab label="JADWAL PEGAWAI" />
             <Tab label="LAPORAN INDIVIDU" />
@@ -110,10 +112,11 @@ const AppContent: React.FC = () => {
         </Box>
 
         <Box>
-          {currentTab === 0 && <PresensiPage />}
-          {currentTab === 1 && <JadwalPage />}
-          {currentTab === 2 && <LaporanPage />}
-          {currentTab === 3 && <LaporanBulananPage />}
+          {currentTab === 0 && <DashboardPage />}
+          {currentTab === 1 && <PresensiPage />}
+          {currentTab === 2 && <JadwalPage />}
+          {currentTab === 3 && <LaporanPage />}
+          {currentTab === 4 && <LaporanBulananPage />}
         </Box>
       </Container>
     </>
