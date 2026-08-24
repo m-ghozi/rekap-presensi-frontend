@@ -28,7 +28,7 @@ Pastikan Anda telah menginstal perangkat lunak berikut:
 Aplikasi ini menggunakan Axios yang secara bawaan diarahkan ke `http://localhost:5000/api`. Jika menggunakan `.env`, Anda dapat membuat file `.env` di *root* direktori frontend:
 
 ```env
-VITE_BASE_API_URL=http://localhost:5000/api
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
 *(Silakan sesuaikan pengaturan base URL pada `src/api/axiosConfig.ts` jika menggunakan variabel env).*

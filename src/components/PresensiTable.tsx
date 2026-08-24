@@ -17,6 +17,8 @@ const getStatusColor = (status: string) => {
   if (s.includes('tepat waktu') || s.includes('terlambat toleransi')) return 'success';
   if (s.includes('terlambat ii')) return 'error';
   if (s.includes('terlambat i')) return 'warning';
+  if (s.includes('belum hadir')) return 'default';
+  if (s.includes('tidak hadir')) return 'error';
   return 'default';
 };
 
