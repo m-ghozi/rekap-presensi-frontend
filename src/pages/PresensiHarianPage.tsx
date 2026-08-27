@@ -9,7 +9,8 @@ import {
   PeopleAlt as PeopleAltIcon,
   CheckCircle as CheckCircleIcon,
   WarningAmber as WarningAmberIcon,
-  EventBusy as EventBusyIcon
+  EventBusy as EventBusyIcon,
+  Download as DownloadIcon
 } from '@mui/icons-material';
 import dayjs, { Dayjs } from 'dayjs';
 import api from '../api/axiosConfig';
@@ -22,6 +23,7 @@ const PresensiHarianPage: React.FC = () => {
   const [selectedName, setSelectedName] = useState<string>('');
   const [data, setData] = useState<IPresensi[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [downloading, setDownloading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchHarianData = useCallback(async (dateStr: string, nameStr: string) => {
@@ -54,6 +56,34 @@ const PresensiHarianPage: React.FC = () => {
   const handleSearch = () => {
     const dateStr = selectedDate ? selectedDate.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
     fetchHarianData(dateStr, selectedName);
+  };
+
+  const handleDownloadExcel = async () => {
+    setDownloading(true);
+    setError(null);
+    try {
+      const dateStr = selectedDate ? selectedDate.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+      const response = await api.get('/presensi/harian/download', {
+        params: {
+          date: dateStr,
+          name: selectedName || undefined,
+        },
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `presensi_harian_${dateStr}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err: any) {
+      setError('Gagal mengunduh file Excel presensi harian');
+    } finally {
+      setDownloading(false);
+    }
   };
 
   // Stats calculation
@@ -96,16 +126,28 @@ const PresensiHarianPage: React.FC = () => {
               value={selectedName}
               onChange={(newValue) => setSelectedName(newValue)}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<SearchIcon />}
-              onClick={handleSearch}
-              disabled={loading}
-              sx={{ minWidth: 120, height: 40, width: { xs: '100%', md: 'auto' } }}
-            >
-              Cari
-            </Button>
+            <Box sx={{ display: 'flex', gap: 2, width: { xs: '100%', md: 'auto' } }}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+                onClick={handleSearch}
+                disabled={loading}
+                sx={{ minWidth: 100, height: 40, flexGrow: 1 }}
+              >
+                Cari
+              </Button>
+              <Button
+                variant="outlined"
+                color="success"
+                startIcon={<DownloadIcon />}
+                onClick={handleDownloadExcel}
+                disabled={downloading || loading}
+                sx={{ minWidth: 120, height: 40, flexGrow: 1, textTransform: 'none', fontWeight: 600 }}
+              >
+                {downloading ? 'Unduh...' : 'Excel'}
+              </Button>
+            </Box>
           </Stack>
         </CardContent>
       </Card>
@@ -144,3 +186,4 @@ const PresensiHarianPage: React.FC = () => {
 };
 
 export default PresensiHarianPage;
+
