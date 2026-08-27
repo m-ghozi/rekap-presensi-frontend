@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
+import PresensiHarianPage from './pages/PresensiHarianPage';
 import PresensiPage from './pages/PresensiPage';
 import JadwalPage from './pages/JadwalPage';
 import LaporanPage from './pages/LaporanPage';
@@ -104,6 +105,7 @@ const AppContent: React.FC = () => {
             textColor="primary"
           >
             <Tab label="DASHBOARD" />
+            <Tab label="PRESENSI HARIAN" />
             <Tab label="REKAP PRESENSI" />
             <Tab label="JADWAL PEGAWAI" />
             <Tab label="LAPORAN INDIVIDU" />
@@ -113,10 +115,11 @@ const AppContent: React.FC = () => {
 
         <Box>
           {currentTab === 0 && <DashboardPage />}
-          {currentTab === 1 && <PresensiPage />}
-          {currentTab === 2 && <JadwalPage />}
-          {currentTab === 3 && <LaporanPage />}
-          {currentTab === 4 && <LaporanBulananPage />}
+          {currentTab === 1 && <PresensiHarianPage />}
+          {currentTab === 2 && <PresensiPage />}
+          {currentTab === 3 && <JadwalPage />}
+          {currentTab === 4 && <LaporanPage />}
+          {currentTab === 5 && <LaporanBulananPage />}
         </Box>
       </Container>
     </>
